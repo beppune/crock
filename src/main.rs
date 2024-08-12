@@ -6,7 +6,7 @@ use std::net::Shutdown;
 use std::str;
 
 mod request;
-use self::request::hello_crock;
+use self::request::HttpRequest;
 
 fn main() {
     
@@ -35,7 +35,11 @@ fn main() {
 
         let message = str::from_utf8(&buffer[..s]).unwrap();
     
-        hello_crock(&message);
+        let r = HttpRequest::deserialize(&message).expect("Nothing found");
+
+        if let HttpRequest::GET(some) = r {
+            println!("From client: {}", some);
+        }
 
         let _ = peer.write( "Hello\n".as_bytes() );
 
