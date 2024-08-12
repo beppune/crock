@@ -21,13 +21,13 @@ fn main() {
 
     println!("Listening on {}", endpoint);
 
-    let mut EQ = EventQueue::new(10);
+    let mut EQ = EventQueue::new(listener, 10);
 
+    EQ.push_accept();
 
-    EQ.push_accept( &listener );
+    let mut ED = EventDispatcher::new(EQ);
 
-    let mut ED = EventDispatcher::new();
-
-    ED.dispatch( & mut EQ );
-    ED.dispatch( & mut EQ );
+    loop {
+        ED.dispatch();
+    }
 }
