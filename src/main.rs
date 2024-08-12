@@ -23,12 +23,11 @@ fn main() {
 
     let mut EQ = EventQueue::new(10);
 
-    while true {
 
-        EQ.push_accept( &listener );
+    EQ.push_accept( &listener );
 
-        let mut ED = EventDispatcher::new();
+    let mut ED = EventDispatcher::new();
 
-        ED.dispatch( & mut EQ );
-    }
+    ED.dispatch( & mut EQ );
+    ED.dispatch( & mut EQ );
 }

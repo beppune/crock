@@ -67,7 +67,8 @@ impl EventDispatcher {
             Event::Read(mut stream) => {
                 let mut buff:[u8; 256] = [0; 256];
                 let size = stream.read( & mut buff ).unwrap();
-                println!("Bytes read from {:?}: {size}", size);
+                let s = str::from_utf8( &buff ).unwrap();
+                println!("Bytes read from {:?}: {size}. Content: {}", size, s);
                 let _ = stream.shutdown(Shutdown::Both);
             },
             _ => {}
