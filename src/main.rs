@@ -5,11 +5,13 @@ use std::net::TcpListener;
 use std::net::Shutdown;
 use std::str;
 
-mod request;
-use self::request::HttpRequest;
+mod events;
+
+use self::events::EventQueue;
+use self::events::EventDispatcher;
 
 fn main() {
-    
+
     const HOST: &str = "127.0.0.1";
     const PORT: &str = "8000";
 
@@ -19,32 +21,14 @@ fn main() {
 
     println!("Listening on {}", endpoint);
 
-    for stream in listener.incoming() {
+    let mut EQ = EventQueue::new(10);
 
-        let mut buffer: [u8; 256] = [0; 256];
+    while true {
 
-        let mut peer = stream.unwrap();
+        EQ.push_accept( &listener );
 
-        let peer_addr = peer.peer_addr().unwrap();
+        let mut ED = EventDispatcher::new();
 
-        println!("Accepting connection from: {}", peer_addr);
-
-        let s: usize = peer.read(&mut buffer).unwrap();
-
-        print!("Bytes red from {}: {}: ", peer_addr, s);
-
-        let message = str::from_utf8(&buffer[..s]).unwrap();
-    
-        let r = HttpRequest::deserialize(&message).expect("Nothing found");
-
-        if let HttpRequest::GET(some) = r {
-            println!("From client: {}", some);
-        }
-
-        let _ = peer.write( "Hello\n".as_bytes() );
-
-        peer.shutdown(Shutdown::Both).expect("Ciaone");
-
+        ED.dispatch( & mut EQ );
     }
-
 }
