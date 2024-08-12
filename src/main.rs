@@ -6,7 +6,7 @@ use std::net::Shutdown;
 use std::str;
 
 mod request;
-use crate::request::hello_crock;
+use self::request::hello_crock;
 
 fn main() {
     
@@ -35,9 +35,9 @@ fn main() {
 
         let message = str::from_utf8(&buffer[..s]).unwrap();
     
-        hello_crock();
+        hello_crock(&message);
 
-        peer.write( "Hello\n".as_bytes() );
+        let _ = peer.write( "Hello\n".as_bytes() );
 
         peer.shutdown(Shutdown::Both).expect("Ciaone");
 

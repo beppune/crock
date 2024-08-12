@@ -1,6 +1,6 @@
 
 
-    pub fn hello_crock() {
-        println!("Hello, Crock!");
+    pub fn hello_crock(message:&str) {
+        println!("Message: {}", message);
     }
 
