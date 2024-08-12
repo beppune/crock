@@ -5,7 +5,8 @@ use std::net::TcpListener;
 use std::net::Shutdown;
 use std::str;
 
-use crate::crock::*;
+mod request;
+use crate::request::hello_crock;
 
 fn main() {
     
@@ -33,12 +34,8 @@ fn main() {
         print!("Bytes red from {}: {}: ", peer_addr, s);
 
         let message = str::from_utf8(&buffer[..s]).unwrap();
-
-        let req = Request::parse_buffer(&buffer[..s]);
-
-        if let Request::GET(resource) = req {
-            println!("Requested: {}", resource);
-        }
+    
+        hello_crock();
 
         peer.write( "Hello\n".as_bytes() );
 
